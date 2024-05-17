@@ -2,7 +2,6 @@ import UIKit
 
 class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     @IBOutlet weak var mainTableView: UITableView!
-//    private var viewModel = FriendsViewModel()
     @IBOutlet weak var atmBarBtn: UIBarButtonItem!
     @IBOutlet weak var sTransBarBtn: UIBarButtonItem!
     @IBOutlet weak var scanBarBtn: UIBarButtonItem!
@@ -21,15 +20,6 @@ class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         super.viewDidLoad()
 
         AppDelegate.friendVC = self
-        // Do any additional setup after loading the view.
-//        AppDelegate.friendsVM.fetchPersonData(from: "https://dimanyen.github.io/man.json") { [weak self] success in
-//            if success {
-//                DispatchQueue.main.async {
-//                    self?.nameLabel.text = AppDelegate.friendsVM.person?.name
-//                    self?.okIdBtn.setTitle("KOKO ID : \(AppDelegate.friendsVM.person?.kokoid ?? "設定")", for: .normal)
-//                }
-//            }
-//        }
         nameLabel.text = AppDelegate.friendsVM.person?.name
         okIdBtn.setTitle("KOKO ID : \(AppDelegate.friendsVM.person?.kokoid ?? "設定")", for: .normal)
         atmBarBtn.tintColor = dotView.backgroundColor
@@ -44,8 +34,6 @@ class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         mainTableView.separatorStyle = .none
         mainTableView.refreshControl = refreshControl
 
-        // 加載資料
-//        loadData()
         // 注册键盘弹出和收起的通知
         originSearchBarHeightConstant = searchBarHeightConstraint.constant
         originalTableViewBottomConstant = mainTableViewBottomConstraint.constant
@@ -95,9 +83,6 @@ class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.mainTableView.reloadData()
         // 停止下拉更新控件
         self.mainTableView.refreshControl?.endRefreshing()
-        // 自動收合下拉更新控件
-//        self.mainTableView.setContentOffset(CGPoint(x: 0, y: 0 - (self.mainTableView.contentInset.top)), animated: true)
-
     }
     
     func resetFriendsTable() {
@@ -178,13 +163,12 @@ class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "CollapsedCell", for: indexPath) as! CollapsedCell
                     cell.setData(friend: friends.first!)
-//                    collapsedIndexPaths.removeAll()
                     return cell
                 }
             }
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FunctionCell", for: indexPath) as! FunctionCell
-            cell.setCounts(mainData[indexPath.section] as! [Int])
+            cell.setCounts([AppDelegate.friendsVM.friends.count,999])
             return cell
         }
     }
@@ -210,20 +194,9 @@ class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         searchBar.resignFirstResponder()
         if tableView.cellForRow(at: indexPath) is CollapsedCell {
             collapsedIndexPaths.removeAll()
-//            collapsedIndexPaths.removeAll(where: { $0 == indexPath })
             expandCells(at: indexPath)
         } else if tableView.cellForRow(at: indexPath) is InvitedCell {
             tableView.deselectRow(at: indexPath, animated: true)
-            
-            if collapsedIndexPaths.contains(indexPath) {
-                // 如果已經是收合的狀態，則展開
-//                collapsedIndexPaths.removeAll(where: { $0 == indexPath })
-//                expandCells(at: indexPath)
-            } else {
-                // 如果是展開的狀態，則收合
-//                collapsedIndexPaths.append(indexPath)
-//                collapseCells(at: indexPath)
-            }
             collapsedIndexPaths.removeAll()
             collapsedIndexPaths.append(indexPath)
             collapseCells(at: indexPath)
@@ -296,8 +269,6 @@ class FriendsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             }
         }
         searchMode = true
-//        mainTableView.reloadData()
-//        scrollSearchCellToTop()
     }
 
     // 键盘收起时恢复底部约束
@@ -358,23 +329,15 @@ class FunctionCell: UITableViewCell {
         separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
-//        friendButton.titleLabel?.layer.borderColor = UIColor.red.cgColor
-//        chatButton.titleLabel?.layer.borderColor = UIColor.red.cgColor
-//        friendButton.titleLabel?.layer.borderWidth = 1
-//        chatButton.titleLabel?.layer.borderWidth = 1
     }
     
     @IBAction func friendButtonTouchUpIn(_ sender: Any) {
-//        friendButton.isSelected = true
         friendBarView.isHidden = false
-//        chatButton.isSelected = false
         chatBarView.isHidden = true
     }
     
     @IBAction func chatButtonTouchUpIn(_ sender: Any) {
-//        friendButton.isSelected = false
         friendBarView.isHidden = true
-//        chatButton.isSelected = true
         chatBarView.isHidden = false
     }
         
@@ -459,8 +422,6 @@ class InvitingCell: UITableViewCell {
         contentView.addSubview(separatorView)
         
         // 设置分隔线的约束
-//        separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-//        separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1.0).isActive = true // 设置分隔线的高度
         separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 90).isActive = true
@@ -491,8 +452,6 @@ class FriendCell: UITableViewCell {
         contentView.addSubview(separatorView)
         
         // 设置分隔线的约束
-//        separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-//        separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         separatorView.heightAnchor.constraint(equalToConstant: 1.0).isActive = true // 设置分隔线的高度
         separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 90).isActive = true
@@ -660,7 +619,7 @@ class FriendsViewModel {
                 self!.invitedFriends = []
                 var removeIs:[Int] = []
                 for i in 0..<self!.friends.count {
-                    if self!.friends[i].status == 2 {
+                    if self!.friends[i].status == 0 {
                         self!.invitedFriends.append(self!.friends[i])
                         removeIs.insert(i, at: 0)
                     }

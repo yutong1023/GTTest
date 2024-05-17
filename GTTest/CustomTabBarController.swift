@@ -11,9 +11,7 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         // Create and set up your custom TabBar
         let customTabBar = CustomTabBar()
         self.setValue(customTabBar, forKey: "tabBar")
-    }
-    
-    // Implement UITabBarControllerDelegate methods if needed
+    }    
 }
 
 class CustomTabBar: UITabBar {
@@ -44,9 +42,8 @@ class CustomTabBar: UITabBar {
             let centerX = centerItem.frame.origin.x + centerItem.frame.size.width / 2
             let centerY = centerItem.frame.origin.y + centerItem.frame.size.height / 2
             buttonX = centerX - halfButtonSize
-            buttonY = -20 //tabBarHeight - buttonSize
+            buttonY = -20
         } else {
-            // If unable to calculate the center tab bar item, place the button at the center
             buttonX = (tabBarWidth - buttonSize) / 2
             buttonY = tabBarHeight - buttonSize
         }
@@ -54,8 +51,6 @@ class CustomTabBar: UITabBar {
         circularButton = UIButton(type: .custom)
         tintColor = UIColor(red: 236/255, green: 0, blue: 140/255, alpha: 12)
         circularButton.frame = CGRect(x: buttonX, y: buttonY, width: buttonSize, height: buttonSize)
-//        circularButton.layer.cornerRadius = halfButtonSize
-//        circularButton.backgroundColor = .white // Customize the appearance as needed
         circularButton.setImage(UIImage(named: "icTabbarHomeOff"), for: .normal)
         circularButton.addTarget(self, action: #selector(circularButtonTapped), for: .touchUpInside)
         self.addSubview(circularButton)
@@ -65,8 +60,6 @@ class CustomTabBar: UITabBar {
         guard let tabBarVC = customTabBarController else {
             return
         }
-        
-        // Select the center tab bar item
         tabBarVC.selectedIndex = (tabBarVC.viewControllers?.count ?? 0) / 2
     }
 }
